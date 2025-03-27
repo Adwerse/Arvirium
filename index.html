@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arvirium - The Future of Cryptocurrencies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Arvirium - innovative cryptocurrency creating the future of finance. Join the revolution in the world of digital currencies.">
+  <meta name="keywords" content="Arvirium, cryptocurrency, blockchain, digital finance">
+  <link rel="preload" href="https://www.w3schools.com/w3css/4/w3.css" as="style">
+  <link rel="preload" href="/styles/styles.css" as="style">
+  <link rel="preload" href="/styles/auth.css" as="style">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js" as="script">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="stylesheet" href="/styles/auth.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <style>
+    /* Fix for charts */
+    #priceChart, #portfolioChart {
+      height: 300px !important;
+      max-height: 300px !important;
+      width: 100% !important;
+    }
+    
+    .chart-filters {
+      margin-bottom: 15px;
+    }
+    
+    .card-content {
+      position: relative;
+      height: auto;
+      min-height: 300px;
+      padding: 20px;
+    }
+    
+    /* Fix for canvas container */
+    .portfolio-chart-container, 
+    .price-chart-container {
+      width: 100% !important;
+      height: 300px !important;
+      max-height: 300px !important;
+      position: relative;
+    }
+    
+    /* Specific fix for wallet charts */
+    #portfolioChart {
+      aspect-ratio: auto;
+    }
+    
+    /* Exchange container fixes */
+    .exchange-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    /* Ensure the exchange form works properly */
+    #exchange-form {
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="theme-dark">
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation">
+    <div class="navbar-container">
+      <div class="logo">
+        <span class="logo-icon"><i class="fas fa-coins"></i></span>
+        <span class="logo-text">ARVIRIUM</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#balance">Balance</a></li>
+        <li><a href="#wallet">Wallet</a></li>
+        <li><a href="#transactions">Trading</a></li>
+        <li><a href="#exchange">Exchange</a></li>
+      </ul>
+      <!-- Theme toggle button -->
+      <div class="theme-toggle">
+        <button id="themeToggle" aria-label="Toggle dark/light theme">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
+      <!-- Auth buttons -->
+      <div class="auth-buttons">
+        <button id="loginBtn" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Войти</button>
+        <button id="registerBtn" class="btn btn-outline"><i class="fas fa-user-plus"></i> Регистрация</button>
+        <button id="logoutBtn" class="btn btn-outline" style="display: none;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Slider -->
+  <header class="bg-slider" role="banner">
+    <img src="/images/cryptocurrency-coding-digital-black-background-open-source-blockchain-concept.jpg" class="active" alt="Cryptocurrency code on black background" loading="lazy">
+    <img src="/images/851595-Money-Coins-Bitcoin.jpg" alt="Bitcoin coins" loading="lazy">
+    <img src="/images/recession-banking-statistics-bad-street.jpg" alt="Banking statistics" loading="lazy">
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="hero" role="region" aria-label="Main information">
+      <div class="hero-content">
+        <h1>Arvirium</h1>
+        <p class="hero-subtitle">Innovative crypto-coin creating the future of finance</p>
+        <div class="hero-badges">
+          <span class="badge"><i class="fas fa-shield-alt"></i> Secure</span>
+          <span class="badge"><i class="fas fa-bolt"></i> Fast</span>
+          <span class="badge"><i class="fas fa-chart-line"></i> Profitable</span>
+        </div>
+        <a href="#balance" class="btn btn-primary" role="button">Start Investing</a>
+      </div>
+      <div class="hero-decoration">
+        <div class="floating-coin coin-1"></div>
+        <div class="floating-coin coin-2"></div>
+        <div class="floating-coin coin-3"></div>
+      </div>
+    </section>
+
+    <!-- Balance Section -->
+    <section id="balance" class="section-premium">
+      <div class="section-header">
+        <h2>Capital Management</h2>
+        <p class="section-subtitle">Add funds to your balance and start investing</p>
+      </div>
+      <div class="w3-container">
+        <div class="w3-row-padding">
+          <!-- Main Balance -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-wallet card-icon"></i>
+                <h3>Main Balance</h3>
+              </div>
+              <div class="card-content">
+                <div class="balance-display">
+                  <p>Current balance:</p>
+                  <span id="currentBalance" class="balance-amount">€0.00</span>
+                </div>
+                <form id="balance-form" aria-label="Balance top-up form">
+                  <div class="input-group">
+                    <label for="balanceAmount">Add funds (€):</label>
+                    <input type="number" id="balanceAmount" class="premium-input" placeholder="Enter amount" required min="0" step="0.01">
+                  </div>
+                  <button type="submit" class="btn btn-premium"><i class="fas fa-plus-circle"></i> Add Funds</button>
+                </form>
+              </div>
+            </article>
+          </div>
+
+          <!-- Price History Chart -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3>Price Dynamics</h3>
+              </div>
+              <div class="card-content">
+                <div class="chart-filters">
+                  <div class="input-group">
+                    <label for="timeRange">Time Range:</label>
+                    <select id="timeRange" class="premium-input">
+                      <option value="7">7 days</option>
+                      <option value="14">14 days</option>
+                      <option value="30">30 days</option>
+                      <option value="90">90 days</option>
+                    </select>
+                  </div>
+                </div>
+                <canvas id="priceChart"></canvas>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wallet Section -->
+    <section id="wallet" class="section-premium">
+      <div class="section-header">
+        <h2>My Wallet</h2>
+        <p class="section-subtitle">Track all your cryptocurrencies in one place</p>
+      </div>
+      <div class="w3-container">
+        <div class="w3-row-padding">
+          <!-- Coins Overview -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-coins card-icon"></i>
+                <h3>Coins Overview</h3>
+              </div>
+              <div class="card-content">
+                <div class="wallet-summary">
+                  <div class="coin-balance-item main-coin">
+                    <div class="coin-icon"><i class="fas fa-coins"></i></div>
+                    <div class="coin-details">
+                      <h4>Arvirium (ARV)</h4>
+                      <p class="coin-amount" id="totalCoinsDisplay">0.00</p>
+                      <p class="coin-value" id="totalCoinValueDisplay">€0.00</p>
+                    </div>
+                  </div>
+                  <div class="coin-balance-item">
+                    <div class="coin-icon"><i class="fab fa-bitcoin"></i></div>
+                    <div class="coin-details">
+                      <h4>Bitcoin (BTC)</h4>
+                      <p class="coin-amount" id="btcBalance">0.00000000</p>
+                      <p class="coin-value" id="btcValue">€0.00</p>
+                    </div>
+                  </div>
+                  <div class="coin-balance-item">
+                    <div class="coin-icon"><i class="fab fa-ethereum"></i></div>
+                    <div class="coin-details">
+                      <h4>Ethereum (ETH)</h4>
+                      <p class="coin-amount" id="ethBalance">0.000000</p>
+                      <p class="coin-value" id="ethValue">€0.00</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Portfolio Distribution -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-chart-pie card-icon"></i>
+                <h3>Portfolio Distribution</h3>
+              </div>
+              <div class="card-content">
+                <div class="portfolio-stats">
+                  <div class="portfolio-total">
+                    <h4>Total Portfolio Value</h4>
+                    <p class="portfolio-value" id="totalPortfolioValue">€0.00</p>
+                  </div>
+                  <div class="portfolio-chart-container">
+                    <canvas id="portfolioChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section id="transactions" class="section-premium section-dark">
+      <div class="section-header">
+        <h2>Trading Platform</h2>
+        <p class="section-subtitle">Invest in the future with Arvirium</p>
+      </div>
+      <div class="w3-container">
+        <div class="w3-row-padding">
+          <!-- Trading Tabs -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="trading-tabs">
+                <button class="tab-btn active" data-tab="buy">Buy</button>
+                <button class="tab-btn" data-tab="sell">Sell</button>
+              </div>
+              
+              <!-- Buy Tab -->
+              <div class="tab-content active" id="buy-tab">
+                <div class="card-header">
+                  <i class="fas fa-shopping-cart card-icon"></i>
+                  <h3>Buy Coins</h3>
+                </div>
+                <div class="card-content">
+                  <div class="live-price">
+                    <span class="price-label">Current price:</span>
+                    <span id="liveCoinPrice" class="price-value">€15.00</span>
+                  </div>
+                  <form id="wallet-form" aria-label="Coin purchase form">
+                    <div class="input-group">
+                      <label for="amount">Investment amount (€):</label>
+                      <input type="number" id="amount" class="premium-input" placeholder="Enter amount" oninput="calculateCoins()" required min="0" step="0.01">
+                    </div>
+                    <div class="input-group">
+                      <label for="coins">You will receive coins:</label>
+                      <input type="text" id="coins" class="premium-input premium-input-readonly" readonly aria-live="polite">
+                    </div>
+                    <button type="submit" class="btn btn-premium btn-buy"><i class="fas fa-shopping-cart"></i> Buy Now</button>
+                  </form>
+                </div>
+              </div>
+              
+              <!-- Sell Tab -->
+              <div class="tab-content" id="sell-tab">
+                <div class="card-header">
+                  <i class="fas fa-cash-register card-icon"></i>
+                  <h3>Sell Coins</h3>
+                </div>
+                <div class="card-content">
+                  <div class="live-price">
+                    <span class="price-label">Current price:</span>
+                    <span id="liveCoinPriceSell" class="price-value">€15.00</span>
+                  </div>
+                  <form id="sell-form" aria-label="Coin selling form">
+                    <div class="input-group">
+                      <label for="sellCoins">Number of coins to sell:</label>
+                      <input type="number" id="sellCoins" class="premium-input" placeholder="Enter amount" oninput="calculateSellValue()" required min="0" step="0.01">
+                    </div>
+                    <div class="input-group">
+                      <label for="sellValue">You will receive (€):</label>
+                      <input type="text" id="sellValue" class="premium-input premium-input-readonly" readonly aria-live="polite">
+                    </div>
+                    <button type="submit" class="btn btn-premium btn-sell"><i class="fas fa-hand-holding-usd"></i> Sell Now</button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Transaction History -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-history card-icon"></i>
+                <h3>Transaction History</h3>
+              </div>
+              <div class="card-content">
+                <div id="transaction-history" class="transaction-history" role="log" aria-live="polite">
+                  <!-- Transaction entries will go here -->
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exchange Section -->
+    <section id="exchange" class="section-premium">
+      <div class="section-header">
+        <h2>Currency Exchange</h2>
+        <p class="section-subtitle">Exchange Arvirium with other cryptocurrencies</p>
+      </div>
+      <div class="w3-container">
+        <div class="w3-row-padding">
+          <!-- Exchange Form -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-exchange-alt card-icon"></i>
+                <h3>Exchange Currencies</h3>
+              </div>
+              <div class="card-content">
+                <form id="exchange-form" aria-label="Currency exchange form">
+                  <div class="exchange-container">
+                    <div class="exchange-from">
+                      <div class="input-group">
+                        <label for="fromAmount">Amount:</label>
+                        <input type="number" id="fromAmount" class="premium-input" placeholder="Enter amount" required min="0" step="0.01" oninput="calculateExchange()">
+                      </div>
+                      <div class="input-group">
+                        <label for="fromCurrency">From:</label>
+                        <select id="fromCurrency" class="premium-input" onchange="calculateExchange()">
+                          <option value="arvirium">Arvirium</option>
+                          <option value="bitcoin">Bitcoin</option>
+                          <option value="ethereum">Ethereum</option>
+                          <option value="euro">Euro (€)</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <button type="button" id="switchCurrencies" class="btn-switch">
+                      <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    
+                    <div class="exchange-to">
+                      <div class="input-group">
+                        <label for="toAmount">You Receive:</label>
+                        <input type="text" id="toAmount" class="premium-input premium-input-readonly" readonly aria-live="polite">
+                      </div>
+                      <div class="input-group">
+                        <label for="toCurrency">To:</label>
+                        <select id="toCurrency" class="premium-input" onchange="calculateExchange()">
+                          <option value="arvirium">Arvirium</option>
+                          <option value="bitcoin" selected>Bitcoin</option>
+                          <option value="ethereum">Ethereum</option>
+                          <option value="euro">Euro (€)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="exchange-rate">
+                    <p>Exchange Rate: <span id="exchangeRate">1 ARV = 0.0000012 BTC</span></p>
+                  </div>
+                  
+                  <button type="submit" class="btn btn-premium btn-exchange"><i class="fas fa-sync-alt"></i> Exchange Now</button>
+                </form>
+              </div>
+            </article>
+          </div>
+
+          <!-- Exchange Rates Card -->
+          <div class="w3-half w3-padding">
+            <article class="premium-card">
+              <div class="card-header">
+                <i class="fas fa-chart-bar card-icon"></i>
+                <h3>Current Exchange Rates</h3>
+              </div>
+              <div class="card-content">
+                <div class="rates-container">
+                  <div class="rate-card">
+                    <div class="rate-icon"><i class="fab fa-bitcoin"></i></div>
+                    <div class="rate-info">
+                      <h4>Bitcoin (BTC)</h4>
+                      <p class="rate-value">1 ARV = 0.0000012 BTC</p>
+                      <p class="rate-change positive">+2.3% <i class="fas fa-arrow-up"></i></p>
+                    </div>
+                  </div>
+                  
+                  <div class="rate-card">
+                    <div class="rate-icon"><i class="fab fa-ethereum"></i></div>
+                    <div class="rate-info">
+                      <h4>Ethereum (ETH)</h4>
+                      <p class="rate-value">1 ARV = 0.000018 ETH</p>
+                      <p class="rate-change positive">+1.5% <i class="fas fa-arrow-up"></i></p>
+                    </div>
+                  </div>
+                  
+                  <div class="rate-card">
+                    <div class="rate-icon"><i class="fas fa-euro-sign"></i></div>
+                    <div class="rate-info">
+                      <h4>Euro (EUR)</h4>
+                      <p class="rate-value">1 ARV = 15.00 EUR</p>
+                      <p class="rate-change negative">-0.8% <i class="fas fa-arrow-down"></i></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="logo footer-logo">
+          <span class="logo-icon"><i class="fas fa-coins"></i></span>
+          <span class="logo-text">ARVIRIUM</span>
+        </div>
+        <p class="footer-tagline">The future of finance is already here</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#balance">Balance</a></li>
+          <li><a href="#wallet">Wallet</a></li>
+          <li><a href="#transactions">Trading</a></li>
+          <li><a href="#exchange">Exchange</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Contacts</h4>
+        <ul class="footer-links">
+          <li><i class="fas fa-envelope"></i> info@arvirium.com</li>
+          <li><i class="fas fa-phone"></i> +1 (800) 123-45-67</li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Social Media</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2024 Arvirium. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/scripts/slide.js" defer></script>
+  <script src="/scripts/crypto.js" defer></script>
+  <script src="/scripts/theme.js" defer></script>
+  <script src="/scripts/exchange.js" defer></script>
+  <script src="/scripts/wallet.js" defer></script>
+  <script type="module" src="/scripts/auth.js" defer></script>
+  <script type="module" src="/scripts/auth-forms.js" defer></script>
+  <script type="module">
+    import initAuthForms from '/scripts/auth-forms.js';
+    import auth from '/scripts/auth.js';
+
+    // Инициализация форм авторизации
+    // initAuthForms(); // Комментируем, так как реализовали собственные функции ниже
+
+    // Создаём функции для работы с формами авторизации, т.к. они определены внутри auth-forms.js и не экспортируются
+    function showLoginForm() {
+      const container = document.getElementById('auth-container');
+      if (container) {
+        container.innerHTML = '';
+        const form = document.createElement('form');
+        form.id = 'login-form';
+        form.className = 'auth-form';
+        form.innerHTML = `
+          <h2>Вход в систему</h2>
+          <button type="button" class="close-btn" id="close-auth-btn">&times;</button>
+          <div class="form-group">
+              <label for="login-email">Email:</label>
+              <input type="email" id="login-email" required>
+          </div>
+          <div class="form-group">
+              <label for="login-password">Пароль:</label>
+              <input type="password" id="login-password" required>
+          </div>
+          <button type="submit" class="btn btn-premium">Войти</button>
+          <p class="form-switch">Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a></p>
+        `;
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          try {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const data = await auth.login({ email, password });
+            
+            // Загружаем данные пользователя и обновляем интерфейс
+            if (data.user) {
+              console.log('Пользователь успешно авторизован:', data.user);
+              
+              // Инициализируем данные пользователя если их нет
+              if (!data.user.coins) data.user.coins = 0;
+              if (!data.user.balance) data.user.balance = 0;
+              if (!data.user.btcBalance) data.user.btcBalance = 0;
+              if (!data.user.ethBalance) data.user.ethBalance = 0;
+              if (!data.user.transactions) data.user.transactions = [];
+              
+              // Сохраняем обновленные данные пользователя
+              localStorage.setItem('user', JSON.stringify(data.user));
+              
+              // Обновляем отображение имени пользователя, если есть соответствующий элемент
+              const userNameDisplay = document.getElementById('userName');
+              if (userNameDisplay) {
+                userNameDisplay.textContent = data.user.username;
+              }
+              
+              // Обновляем отображение баланса
+              const currentBalance = document.getElementById('currentBalance');
+              if (currentBalance) {
+                currentBalance.textContent = `€${parseFloat(data.user.balance || 0).toFixed(2)}`;
+              }
+              
+              // Генерируем событие о входе пользователя для обновления всех компонентов
+              window.dispatchEvent(new CustomEvent('userLoggedIn', {
+                detail: { user: data.user }
+              }));
+            }
+            
+            // Перезагружаем страницу после 1 секунды
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } catch (error) {
+            alert('Ошибка входа: ' + error.message);
+          }
+        });
+
+        container.appendChild(form);
+      }
+    }
+
+    function showRegisterForm() {
+      const container = document.getElementById('auth-container');
+      if (container) {
+        container.innerHTML = '';
+        const form = document.createElement('form');
+        form.id = 'register-form';
+        form.className = 'auth-form';
+        form.innerHTML = `
+          <h2>Регистрация</h2>
+          <button type="button" class="close-btn" id="close-auth-btn">&times;</button>
+          <div class="form-group">
+              <label for="register-username">Имя пользователя:</label>
+              <input type="text" id="register-username" required>
+          </div>
+          <div class="form-group">
+              <label for="register-email">Email:</label>
+              <input type="email" id="register-email" required>
+          </div>
+          <div class="form-group">
+              <label for="register-password">Пароль:</label>
+              <input type="password" id="register-password" required>
+          </div>
+          <div class="form-group">
+              <label for="register-password-confirm">Подтвердите пароль:</label>
+              <input type="password" id="register-password-confirm" required>
+          </div>
+          <button type="submit" class="btn btn-premium">Зарегистрироваться</button>
+          <p class="form-switch">Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
+        `;
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          try {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+
+            if (password !== passwordConfirm) {
+              throw new Error('Пароли не совпадают');
+            }
+
+            await auth.register({ username, email, password });
+            alert('Регистрация успешна! Теперь вы можете войти.');
+            // Скрываем контейнер после успешной регистрации
+            const authContainer = document.getElementById('auth-container');
+            if (authContainer) {
+              authContainer.style.display = 'none';
+            }
+            showLoginForm();
+          } catch (error) {
+            alert('Ошибка регистрации: ' + error.message);
+          }
+        });
+
+        container.appendChild(form);
+      }
+    }
+
+    // Обработчики кнопок авторизации
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const authContainer = document.getElementById('auth-container');
+      if (authContainer) {
+        authContainer.style.display = 'flex';
+        showLoginForm();
+      } else {
+        // Если контейнер не существует, создаем его
+        const container = document.createElement('div');
+        container.id = 'auth-container';
+        document.body.appendChild(container);
+        container.style.display = 'flex';
+        showLoginForm();
+      }
+    });
+
+    document.getElementById('registerBtn').addEventListener('click', () => {
+      const authContainer = document.getElementById('auth-container');
+      if (authContainer) {
+        authContainer.style.display = 'flex';
+        showRegisterForm();
+      } else {
+        // Если контейнер не существует, создаем его
+        const container = document.createElement('div');
+        container.id = 'auth-container';
+        document.body.appendChild(container);
+        container.style.display = 'flex';
+        showRegisterForm();
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      auth.logout();
+      
+      // Генерируем событие о выходе пользователя для обновления всех компонентов
+      window.dispatchEvent(new CustomEvent('userLoggedOut'));
+      
+      // Перезагружаем страницу
+      window.location.reload();
+    });
+
+    // Добавляем обработчик для кнопки закрытия
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'close-auth-btn') {
+        const authContainer = document.getElementById('auth-container');
+        if (authContainer) {
+          authContainer.style.display = 'none';
+        }
+      } else if (e.target.id === 'show-register') {
+        e.preventDefault();
+        showRegisterForm();
+      } else if (e.target.id === 'show-login') {
+        e.preventDefault();
+        showLoginForm();
+      }
+    });
+
+    // Обновление отображения кнопок авторизации
+    function updateAuthButtons() {
+      const isAuthenticated = auth.checkAuth();
+      document.getElementById('loginBtn').style.display = isAuthenticated ? 'none' : 'inline-block';
+      document.getElementById('registerBtn').style.display = isAuthenticated ? 'none' : 'inline-block';
+      document.getElementById('logoutBtn').style.display = isAuthenticated ? 'inline-block' : 'none';
+    }
+
+    // Проверяем авторизацию при загрузке страницы
+    updateAuthButtons();
+    
+    // Инициализируем данные пользователя при загрузке страницы, если он авторизован
+    if (auth.checkAuth()) {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        
+        // Инициализируем данные пользователя если их нет
+        if (!user.coins) user.coins = 0;
+        if (!user.balance) user.balance = 0;
+        if (!user.btcBalance) user.btcBalance = 0;
+        if (!user.ethBalance) user.ethBalance = 0;
+        if (!user.transactions) user.transactions = [];
+        
+        // Сохраняем обновленные данные
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Генерируем событие о входе пользователя при загрузке страницы
+        window.dispatchEvent(new CustomEvent('userLoggedIn', {
+          detail: { user }
+        }));
+      }
+    }
+    
+    // Создаем стили для отображения имени пользователя
+    function addUserNameStyles() {
+      // Проверяем, существует ли уже стиль
+      if (!document.getElementById('userName-styles')) {
+        const styleElement = document.createElement('style');
+        styleElement.id = 'userName-styles';
+        styleElement.textContent = `
+          .user-name-display {
+              margin: 10px 0 20px;
+              font-size: 1.2rem;
+              color: #f8f9fa;
+              opacity: 0;
+              transform: translateY(20px);
+              animation: fadeInUp 0.6s forwards;
+          }
+          
+          .welcome-text {
+              font-weight: 300;
+          }
+          
+          .username {
+              font-weight: 700;
+              color: #daa520;
+          }
+          
+          @keyframes fadeInUp {
+              to {
+                  opacity: 1;
+                  transform: translateY(0);
+              }
+          }
+        `;
+        document.head.appendChild(styleElement);
+      }
+    }
+    
+    // Добавляем стили для имени пользователя
+    addUserNameStyles();
+  </script>
+</body>
+</html>

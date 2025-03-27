@@ -1,0 +1,17 @@
+name: tuscoin-app
+services:
+  - name: web
+    project: .
+    language: node
+    host: appservice
+    region: westeurope
+    sku: B1
+    env:
+      - name: NODE_ENV
+        value: production
+      - name: COSMOS_DB_URI
+        secretRef: cosmos-db-uri
+      - name: JWT_SECRET
+        secretRef: jwt-secret
+      - name: ALLOWED_ORIGINS
+        value: https://your-frontend-domain.com 
