@@ -6,7 +6,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(cors({
@@ -22,7 +22,13 @@ const connectDB = async () => {
     try {
         const uri = process.env.COSMOS_DB_URI;
         if (!uri) {
-            throw new Error('COSMOS_DB_URI не определен в переменных окружения');
+            console.warn('COSMOS_DB_URI не определен в переменных окружения. Используется локальная MongoDB.');
+            await mongoose.connect('mongodb://localhost:27017/arvirium', {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            });
+            console.log('Успешное подключение к локальной MongoDB');
+            return;
         }
         
         await mongoose.connect(uri, {
@@ -33,12 +39,20 @@ const connectDB = async () => {
         });
         console.log('Успешное подключение к Cosmos DB');
     } catch (err) {
-        console.error('Ошибка подключения к Cosmos DB:', err);
-        process.exit(1);
+        console.error('Ошибка подключения к базе данных:', err);
+        // В production среде остановим приложение при ошибке подключения
+        if (process.env.NODE_ENV === 'production') {
+            process.exit(1);
+        }
     }
 };
 
 connectDB();
+
+// Проверка работоспособности
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'TusCoin API работает' });
+});
 
 // Модель пользователя
 const UserSchema = new mongoose.Schema({
@@ -208,6 +222,17 @@ app.get('/api/user/transactions', authenticateToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Ошибка сервера' });
     }
+});
+
+// Добавляем обработчик ошибок 404
+app.use((req, res) => {
+    res.status(404).json({ error: 'Маршрут не найден' });
+});
+
+// Глобальный обработчик ошибок
+app.use((err, req, res, next) => {
+    console.error('Ошибка сервера:', err);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
 });
 
 app.listen(PORT, () => {
